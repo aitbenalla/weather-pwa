@@ -1,11 +1,43 @@
 import './App.css';
-import {useState} from "react";
+import {useLayoutEffect, useState} from "react";
 import {fetchWeather} from "./fetchWeather";
+import rain from './rain.jpeg'
+import clear from './clear.jpeg'
+import clouds from './clouds.jpeg'
+import snow from './snow.jpeg'
+
 
 function App() {
 
     const [query, setQuery] = useState('')
     const [weather, setWeather] = useState({})
+    const [background, setBackground] = useState('')
+
+    useLayoutEffect(() => {
+        if (weather.main) {
+            console.log(weather.weather[0].main)
+
+            switch (weather.weather[0].main) {
+                case 'Clouds':
+                    setBackground(clouds)
+                    break
+                case 'Rain':
+                    setBackground(rain)
+                    break
+                case 'Clear':
+                    setBackground(clear)
+                    break
+                case 'Snow':
+                    setBackground(snow)
+                    break
+                default:
+                    setBackground(clear)
+                    break
+            }
+
+            document.body.style.backgroundImage = `url('${background}')`
+        }
+    }, [weather, background])
 
     const search = async (e) => {
         if (e.key === 'Enter') {
@@ -29,7 +61,7 @@ function App() {
                 {weather.main && (
                 <div>
                     <div className="max-w-sm rounded-2xl shadow-2xl text-center bg-white bg-opacity-50">
-                        <div className="p-20">
+                        <div className="p-16">
                             <div className="font-bold text-3xl mb-8">
                                 <h1>
                                     {weather.name}
